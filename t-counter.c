@@ -15,7 +15,7 @@
 #include <netinet/in.h>
 
 /***************************************************************
-* Some Requirements --
+* Some Requirements --cd
 * Arguments: same as recv(2)
 * Return:-1 on error or bytes received
 *
@@ -93,21 +93,25 @@ int main(int argc, char *argv[])
   char server_reply[MAX_LINE];
   message = REQUEST;
   //test for request fail to the server
-  if( send(s , message , 1000 , 0) < 0){
+  if( send(s , message , *len , 0) < 0){
     perror("Send failed");
     return -1;
   }
   //send a request to the server to return the content from the webpage
-  send(s , message , 1000 , 0);
+  send(s , message , *len , 0);
   printf("Data Send\n");
 
   /* Receive a reply from the server   // want to call readchunk here before recv(),then repeatedly call recv() inside of function  */
+  // int retval;
+  // retval = readchunk(s, server_reply, len, value);
+  // printf("%i\n", retval);
+
   recv(s , server_reply , sizeof(server_reply) , 0);
 
   printf("Reply received\n");
   printf("%s\n", server_reply);    // used to print out entire request from server
 
-  /*  this searches for the value but as is it only finds the first occurrence and then
+  /*  this works to search for the value but as is it only finds the first occurrence and then
       prints out everything after it as well   */
   // char *retval;
   // retval = strstr(server_reply, value);
@@ -130,9 +134,15 @@ int main(int argc, char *argv[])
 // return counter
 ********************************************************************************************  */
 int count;  // needs to return a count of how many times the given value occured
-ssize_t readchunk( int s, void *server_reply, size_t len )
+ssize_t readchunk( int s, void *server_reply, size_t len, char *value )
 {
-  return count;
+  // recv(s , server_reply , sizeof(server_reply) , 0);
+  // while(sizeof(server_reply) < len){
+  //   char *found;
+  //   found = strstr(server_reply, value);
+  //   count++;
+  // }
+  // return count;
 /* Define readchunck to return exactly len bytes unless an error occurs or the socket closes.
 */
 
