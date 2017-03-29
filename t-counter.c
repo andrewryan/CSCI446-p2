@@ -134,15 +134,18 @@ int main(int argc, char *argv[])
 // after both lengths match, all bytes have been read in
 // return counter
 ********************************************************************************************  */
-int count;  // needs to return a count of how many times the given value occured
-ssize_t readchunk( int s, void *server_reply, size_t len, char *value )
+int count = 0;  // needs to return a count of how many times the given value occured
+int readchunk( int s, void *server_reply, size_t len, char *value )
 {
-  // recv(s , server_reply , sizeof(server_reply) , 0);
-  // while(sizeof(server_reply) < len){
-  //   char *found;
-  //   found = strstr(server_reply, value);
-  //   count++;
-  // }
+  recv(s , server_reply , sizeof(server_reply) , 0);
+  int size;
+  size = sizeof("%i", *server_reply);     // use size to save the server_reply length to a variable
+  while(size < len){                          //so you can compare it to the length of server reply to
+    if(strstr(server_reply, value) != NULL){      //see if the entire reply has been read through
+      count++;
+    }
+    size = len - size;
+  }
   return count;
 /* Define readchunck to return exactly len bytes unless an error occurs or the socket closes.
 */
