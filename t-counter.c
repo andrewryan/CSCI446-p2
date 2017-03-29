@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 int count = 0;  // needs to return a count of how many times the given value occured
 int readchunk( int s, void *server_reply, size_t len, char *value )
 {
-  recv(s , server_reply , sizeof(server_reply) , 0);
+  recv(s , server_reply , len , 0);
   int size;
   size = sizeof("%i", *server_reply);     // use size to save the server_reply length to a variable
   while(size < len){                          //so you can compare it to the length of server reply to
