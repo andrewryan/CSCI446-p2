@@ -123,9 +123,10 @@ int main(int argc, char *argv[])
 }
 
 /* *********************************************************************************************
-// call readchunk     ssize_t readchunk( int s, void *server_reply, size_t len )
+// call readchunk
 // ssize_t len is the value read in from the command line
 // server_reply is the buffer returned from the server
+// value is what we are looking for form the command line
 // call recv
 // find matches to command line arg for value
 // increment count if found
@@ -142,7 +143,7 @@ ssize_t readchunk( int s, void *server_reply, size_t len, char *value )
   //   found = strstr(server_reply, value);
   //   count++;
   // }
-  // return count;
+  return count;
 /* Define readchunck to return exactly len bytes unless an error occurs or the socket closes.
 */
 
