@@ -15,8 +15,7 @@
 #include <netinet/in.h>
 
 /***************************************************************
-* Some Requirements --cd
-* Arguments: same as recv(2)
+* Some Requirements --
 * Return:-1 on error or bytes received
 *
 * Receive len bytes of data into array buf from socket sockfd. Always receive len bytes
@@ -30,15 +29,16 @@
 #define host "www.ecst.csuchico.edu"
 #define SERVER_PORT "80"
 #define REQUEST "GET /~ehamouda/file.html HTTP/1.0\n\n"
-#define MAX_LINE 1000  // determines buffer size for recv()
+#define MAX_LINE 1001  // determines buffer size for recv(), 1001 to account for NULL pointer
 
+ssize_t readchunck( int sockfd, char *server_reply, ssize_t len, char *value );
 
 int main(int argc, char *argv[])
 {
   struct addrinfo hints;
   struct addrinfo *rp, *result;
   int s;
-  char *len;
+  int len;
   char *value;
 
   if (argc > 3){
@@ -50,10 +50,10 @@ int main(int argc, char *argv[])
     return -1;
   }
   //storing command line arguments to be used in readchunk
-  len = argv[1];
+  len = atoi(argv[1]);
   value = argv[2];
   printf("command line byte length = ");
-  printf("%s\n",len);
+  printf("%i\n",len);
   printf("command line search value = ");
   printf("%s\n",value);
 
@@ -93,35 +93,27 @@ int main(int argc, char *argv[])
   char server_reply[MAX_LINE];
   message = REQUEST;
   //test for request fail to the server
-  if( send(s , message , *len , 0) < 0){
+  if( send(s , message , len , 0) < 0){
     perror("Send failed");
     return -1;
   }
   //send a request to the server to return the content from the webpage
-  send(s , message , *len , 0);
+  send(s , message , strlen(message) , 0);
   printf("Data Send\n");
 
-  /* Receive a reply from the server   // want to call readchunk here before recv(),then repeatedly call recv() inside of function  */
-  // int retval;
-  // retval = readchunk(s, server_reply, len, value);
-  // printf("%i\n", retval);
+  //retval contains the number of matches returned from readchunk
+  int retval;
+  retval = readchunk(s, server_reply, len, value);
+  printf("Total number of matches: ");
+  printf("%i\n", retval);
 
-  recv(s , server_reply , sizeof(server_reply) , 0);
-
+  //recv(s , server_reply , len , 0);
   printf("Reply received\n");
-  printf("%s\n", server_reply);    // used to print out entire request from server
-
-  /*  this works to search for the value but as is it only finds the first occurrence and then
-      prints out everything after it as well   */
-  // char *retval;
-  // retval = strstr(server_reply, value);
-  // printf("results from ret: ");
-  // printf("%s\n",retval);
+  //printf("%s\n", server_reply);    // used to print out entire request from server
 
   close(s);
   return 0;
 }
-
 /* *********************************************************************************************
 // call readchunk
 // ssize_t len is the value read in from the command line
@@ -130,34 +122,31 @@ int main(int argc, char *argv[])
 // call recv
 // find matches to command line arg for value
 // increment count if found
-// check to see if size length equals the passed in size_t len
+// check to see if the length of the buffer that was read equals the size passed in size_t len
 // after both lengths match, all bytes have been read in
 // return counter
 ********************************************************************************************  */
-int count = 0;  // needs to return a count of how many times the given value occured
-int readchunk( int s, void *server_reply, size_t len, char *value )
+int readchunk( int s, char *server_reply, ssize_t len, char *value )
 {
+  //receive the buffer to be searched for match
   recv(s , server_reply , len , 0);
-  int size;
-  size = sizeof("%i", *server_reply);     // use size to save the server_reply length to a variable
-  while(size < len){                          //so you can compare it to the length of server reply to
-    if(strstr(server_reply, value) != NULL){      //see if the entire reply has been read through
-      count++;
+
+  int i, j, count = 0;
+  char *match = value;
+  //while() //use while to check if entire buffer has been read through for matches ***********
+  /* readchunk uses a for loop to iterate through the server_reply, while the server_reply does not equal
+      the NULL pointer, if the value of the pointer to server_reply equals the pointer to the first value
+      in the match, use strcmp() to compare the two strings for a match */
+  for (i = 0, j = 0; server_reply[i] != '\0'; i++) {
+    if (server_reply[i] == match[j]) {
+      if(strcmp(server_reply, match)){
+        count++;
+      }
+      else{
+        i++;
+      }
     }
-    size = len - size;
   }
+  //return the number of matches found
   return count;
-/* Define readchunck to return exactly len bytes unless an error occurs or the socket closes.
-*/
-
 }
-
-
-// these were the provided examples for readchunk *************************************
-// ssize_t readchunck( int sockfd, void *buf, size_t len );
-// ssize_t readchunck( int sockfd, void *buf, size_t len )
-// {
-// /* Define readchunck to return exactly len bytes unless an error occurs or the socket closes.
-// */
-//
-// }
