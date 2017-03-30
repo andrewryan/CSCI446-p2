@@ -126,6 +126,10 @@ int main(int argc, char *argv[])
 // after both lengths match, all bytes have been read in
 // return counter
 ********************************************************************************************  */
+
+/* readchunk uses a for loop to iterate through the server_reply, while the server_reply does not equal
+    the NULL pointer, if the value of the pointer to server_reply equals the pointer to the first value
+    in the match, use strcmp() to compare the two strings for a match */
 int readchunk( int s, char *server_reply, ssize_t len, char *value )
 {
   //receive the buffer to be searched for match
@@ -134,9 +138,6 @@ int readchunk( int s, char *server_reply, ssize_t len, char *value )
   int i, j, count = 0;
   char *match = value;
   //while() //use while to check if entire buffer has been read through for matches ***********
-  /* readchunk uses a for loop to iterate through the server_reply, while the server_reply does not equal
-      the NULL pointer, if the value of the pointer to server_reply equals the pointer to the first value
-      in the match, use strcmp() to compare the two strings for a match */
   for (i = 0, j = 0; server_reply[i] != '\0'; i++) {
     if (server_reply[i] == match[j]) {
       if(strcmp(server_reply, match)){
