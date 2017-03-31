@@ -5,10 +5,6 @@ $ ./t-counter 100 "socket"
 
 Number of socket instances: 20
 
-$ ./t-counter 10 "<p>"
+$ ./t-counter 10 "class"
 
-Number of <p> instances: 20
-
-$ ./t-counter 20 "<i>"
-
-Number of <i> instances: 22
+Number of class instances: 20
