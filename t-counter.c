@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 /* Readchunk uses a for loop to iterate through the server_reply, as long as the the server_reply does not equal
     the NULL pointer, if the value of the pointer to server_reply equals the pointer to the first value
     in the match, a while loop is used to continue to compare the buffer for a possible match, the variable
-    j is used as a placeholder to be able to iterate through matching characters */
+    j is used to iterate through the command line argument value to compare it to the buffer */
 
 int readchunk( int s, char *server_reply, ssize_t len, char *value )
 {
