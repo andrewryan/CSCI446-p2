@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
   char *value;
 
   if (argc > 3){
-	  perror("Too many command line arguments given.");
+	  perror("Too many command line arguments were given.");
     return -1;
   }
   if (argc < 3){
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
   len = atoi(argv[1]);
   value = argv[2];
   if (len > 1000){
-    perror("Chunk size is too large, max is 1000.");
+    perror("Chunk size is too large, max size is 1000.");
     return -1;
   }
 
@@ -108,13 +108,11 @@ int readchunk( int s, char *server_reply, ssize_t len, char *value )
     perror("The server did not send the correct amount of bytes.");
     return -1;
   }
-  //printf("%s\n",server_reply); // use this to test if the correct number of matches are found
+  /* printf("%s\n",server_reply); // use this to test if the correct number of matches are found  */
   int i, j;
   int count = 0;
   char *match = value;
   int value_length = strlen(value);
-  /* still need a loop to check if entire buffer has been read through,if
-      it hasn't then return the number of bytes that was read through */
   for (i = 0, j = 0; server_reply[i] != '\0'; i++) {
     if (server_reply[i] == match[j]) {
       j++;
