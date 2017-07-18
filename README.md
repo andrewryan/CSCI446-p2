@@ -1,4 +1,4 @@
-<b>HTML tag counter</b>
+# HTML tag counter
 
 Input and output examples:
 
