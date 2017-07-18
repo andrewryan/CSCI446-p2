@@ -1,3 +1,5 @@
+<b>HTML tag counter</b>
+
 Input and output examples:
 
 $ ./t-counter 100 "socket"
