@@ -1,4 +1,4 @@
-# CSCI446-p2
+HTML tag counter
 Input and output examples:
 
 $ ./t-counter 100 "socket"
